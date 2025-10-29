@@ -32,3 +32,11 @@ class TestAccount:
     def test_promoCode_wrong_suffix_minus(self):
         account = Account ("Alice", "Smith", "12345678901", "PROM-XYZ")
         assert account.balance == 0.0
+
+    def test_promoCode_person_too_old(self):
+        account = Account ("Alice", "Smith", "59125678901", "PROM-XYZ")
+        assert account.balance == 0.0
+    
+    def test_promoCode_person_valid(self):
+        account = Account ("Alice", "Smith", "03305678901", "PROM_XYZ")
+        assert account.balance == 50.0
