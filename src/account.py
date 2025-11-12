@@ -18,3 +18,75 @@ class Account:
         month = int(pesel[2:4])
         if year > 60 or month > 20:
             return True
+    
+    def _is_positive(self, amount):
+        try:
+            return isinstance(amount, (int, float)) and amount > 0
+        except Exception:
+            return False
+
+    def transfer_in(self, amount: float):
+        if not self._is_positive(amount):
+            return False
+        self.balance += float(amount)
+        return True
+
+    def can_transfer_out(self, amount: float):
+        return self._is_positive(amount) and self.balance >= float(amount)
+
+    def transfer_out(self, amount: float):
+        if not self.can_transfer_out(amount):
+            return False
+        self.balance -= float(amount)
+        return True
+
+    def express_out(self, amount: float):
+        fee = 1.0
+        if not self._is_positive(amount):
+            return False
+        if self.balance < float(amount):
+            return False
+        
+        self.balance -= float(amount)
+        self.balance -= fee
+        return True
+
+class BusinessAccount:
+    def __init__(self, company_name: str, nip: str, promoCode=None):
+        self.company_name = company_name
+        self.nip = nip if self._is_nip_valid(nip) else "Invalid"
+        self.balance = 0.0
+
+    def _is_positive(self, amount):
+        try:
+            return isinstance(amount, (int, float)) and amount > 0
+        except Exception:
+            return False
+
+    def _is_nip_valid(self, nip):
+        return isinstance(nip, str) and len(nip) == 10 and nip.isdigit()
+
+    def transfer_in(self, amount: float):
+        if not self._is_positive(amount):
+            return False
+        self.balance += float(amount)
+        return True
+
+    def can_transfer_out(self, amount: float):
+        return self._is_positive(amount) and self.balance >= float(amount)
+
+    def transfer_out(self, amount: float):
+        if not self.can_transfer_out(amount):
+            return False
+        self.balance -= float(amount)
+        return True
+
+    def express_out(self, amount: float):
+        fee = 5.0
+        if not self._is_positive(amount):
+            return False
+        if self.balance < float(amount):
+            return False
+        self.balance -= float(amount)
+        self.balance -= fee
+        return True
