@@ -1,10 +1,16 @@
+import pytest
 from src.business_account import BusinessAccount
 
+
 class TestBusinessAccount:
-    def test_business_account_invalid_nip(self):
-        b = BusinessAccount(company_name="Foo", nip="12345")
-        assert b.nip == "Invalid"
-        
-    def test_business_account_valid_nip(self):
-        b = BusinessAccount(company_name="Bar", nip="1234567890")
-        assert b.nip == "1234567890"
+
+    @pytest.mark.parametrize(
+        "nip, expected",
+        [
+            ("12345", "Invalid"),
+            ("1234567890", "1234567890"),
+        ],
+    )
+    def test_business_account_nip_variants(self, nip, expected):
+        b = BusinessAccount(company_name="FooBar", nip=nip)
+        assert b.nip == expected

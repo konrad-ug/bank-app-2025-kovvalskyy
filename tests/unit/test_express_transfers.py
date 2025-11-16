@@ -1,31 +1,46 @@
+import pytest
 from src.account import Account
 from src.business_account import BusinessAccount
 
+
+@pytest.fixture()
+def personal():
+    return Account("John", "Doe", "12345678901")
+
+
+@pytest.fixture()
+def business():
+    return BusinessAccount(company_name="Acme", nip="1234567890")
+
+
 class TestExpressTransfers:
-    def test_express_out_personal_allows_fee_overdraft(self):
-        a = Account("John", "Doe", "12345678901")
-        a.transfer_in(100.0)
-        ok = a.express_out(100.0)  # fee 1 PLN
-        assert ok is True
-        assert a.balance == -1.0
 
-    def test_express_out_personal_requires_amount_covered(self):
-        a = Account("John", "Doe", "12345678901")
-        a.transfer_in(99.0)
-        ok = a.express_out(100.0)  # nie ma kwoty przelewu
-        assert ok is False
-        assert a.balance == 99.0
+    @pytest.mark.parametrize(
+        "start_balance, amount, expected_ok, expected_balance",
+        [
+            (100.0, 100.0, True, -1.0),   # pozwala na debet o opłatę
+            (99.0, 100.0, False, 99.0),   # brak środków na kwotę przelewu
+        ],
+    )
+    def test_express_out_personal(
+        self, personal, start_balance, amount, expected_ok, expected_balance
+    ):
+        personal.transfer_in(start_balance)
+        ok = personal.express_out(amount)
+        assert ok is expected_ok
+        assert personal.balance == expected_balance
 
-    def test_express_out_business_fee_5(self):
-        b = BusinessAccount(company_name="Acme", nip="1234567890")
-        b.transfer_in(100.0)
-        ok = b.express_out(100.0)  # fee 5
-        assert ok is True
-        assert b.balance == -5.0
-
-    def test_express_out_business_requires_amount_covered(self):
-        b = BusinessAccount(company_name="Acme", nip="1234567890")
-        b.transfer_in(50.0)
-        ok = b.express_out(60.0)
-        assert ok is False
-        assert b.balance == 50.0
+    @pytest.mark.parametrize(
+        "start_balance, amount, expected_ok, expected_balance",
+        [
+            (100.0, 100.0, True, -5.0),   # fee 5
+            (50.0, 60.0, False, 50.0),    # brak środków na kwotę przelewu
+        ],
+    )
+    def test_express_out_business(
+        self, business, start_balance, amount, expected_ok, expected_balance
+    ):
+        business.transfer_in(start_balance)
+        ok = business.express_out(amount)
+        assert ok is expected_ok
+        assert business.balance == expected_balance

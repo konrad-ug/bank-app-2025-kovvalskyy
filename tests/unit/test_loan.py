@@ -1,21 +1,24 @@
 from src.account import Account
 import pytest
 
+
 class TestLoan:
 
     @pytest.fixture()
     def account(self):
-        a = Account("John", "Doe", "12345678901")
-        return a
+        return Account("John", "Doe", "12345678901")
 
-    def test_3_posiitve_transfers(self, account):
-        account.history = [100, 200, 500]
-        result =  account.submit_for_loan(200)
-        assert result
-        assert account.balance == 200
-   
-    def test_4_transfers_one_negative(self, account):
-        account.history = [100, 200, 500, -100]
-        result = account.submit_for_loan(300)
-        assert result is False
-        assert account.balance == 0
+    @pytest.mark.parametrize(
+        "history, loan_amount, expected_result, expected_balance",
+        [
+            ([100, 200, 500], 200, True, 200),      #  dodatnie –  przyznana
+            ([100, 200, 500, -100], 300, False, 0), #  jedna ujemna – odrzucona
+        ],
+    )
+    def test_submit_for_loan_variants(
+        self, account, history, loan_amount, expected_result, expected_balance
+    ):
+        account.history = history
+        result = account.submit_for_loan(loan_amount)
+        assert result is expected_result
+        assert account.balance == expected_balance
