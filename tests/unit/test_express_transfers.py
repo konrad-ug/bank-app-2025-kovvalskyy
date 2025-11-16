@@ -1,4 +1,5 @@
-from src.account import Account, BusinessAccount
+from src.account import Account
+from src.business_account import BusinessAccount
 
 class TestExpressTransfers:
     def test_express_out_personal_allows_fee_overdraft(self):

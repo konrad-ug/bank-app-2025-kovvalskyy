@@ -4,7 +4,7 @@ class Account:
         self.last_name = last_name
         self.pesel = pesel if self.is_pesel_valid(pesel) else "Invalid"
         self.balance = 50 if self.is_promoCode_valid(promoCode) and self.is_person_using_promoCode_valid(pesel) else 0.0
-        self.historia = []
+        self.history = []
 
     def is_pesel_valid(self, pesel):
         if isinstance(pesel, str) and len(pesel) == 11:
@@ -33,14 +33,14 @@ class Account:
         if not self._is_positive(amount):
             return False
         self.balance += float(amount)
-        self.historia.append(float(amount))
+        self.history.append(float(amount))
         return True
 
     def transfer_out(self, amount: float):
         if not self.can_transfer_out(amount):
             return False
         self.balance -= float(amount)
-        self.historia.append(-float(amount))
+        self.history.append(-float(amount))
         return True
 
     def express_out(self, amount: float):
@@ -50,54 +50,14 @@ class Account:
         if self.balance < float(amount):
             return False
         self.balance -= float(amount)
-        self.historia.append(-float(amount))
+        self.history.append(-float(amount))
         self.balance -= fee
-        self.historia.append(-fee)
+        self.history.append(-fee)
         return True
 
-
-class BusinessAccount:
-    def __init__(self, company_name: str, nip: str, promoCode=None):
-        self.company_name = company_name
-        self.nip = nip if self._is_nip_valid(nip) else "Invalid"
-        self.balance = 0.0
-        self.historia = []
-
-    def _is_nip_valid(self, nip):
-        return isinstance(nip, str) and len(nip) == 10 and nip.isdigit()
-
-    def _is_positive(self, amount):
-        try:
-            return isinstance(amount, (int, float)) and amount > 0
-        except Exception:
+    def submit_for_loan(self, amount: float):
+        if (all(x > 0 for x in self.history[-3:]) or ((len(self.history) > 4) and (sum(self.history[-5:]) > amount))):
+            self.balance += amount
+            return True
+        else:
             return False
-
-    def can_transfer_out(self, amount: float):
-        return self._is_positive(amount) and self.balance >= float(amount)
-
-
-    def transfer_in(self, amount: float):
-        if not self._is_positive(amount):
-            return False
-        self.balance += float(amount)
-        self.historia.append(float(amount))
-        return True
-
-    def transfer_out(self, amount: float):
-        if not self.can_transfer_out(amount):
-            return False
-        self.balance -= float(amount)
-        self.historia.append(-float(amount))
-        return True
-
-    def express_out(self, amount: float):
-        fee = 5.0
-        if not self._is_positive(amount):
-            return False
-        if self.balance < float(amount):
-            return False
-        self.balance -= float(amount)
-        self.historia.append(-float(amount))
-        self.balance -= fee
-        self.historia.append(-fee)
-        return True
