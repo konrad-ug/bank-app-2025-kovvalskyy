@@ -42,3 +42,10 @@ class BusinessAccount:
         self.balance -= fee
         self.history.append(-fee)
         return True
+    
+    def take_loan(self, amount: float):
+        zus = -1775
+        if self.balance >= amount*2 and zus in self.history:
+            self.balance += amount
+            return True
+        return False
