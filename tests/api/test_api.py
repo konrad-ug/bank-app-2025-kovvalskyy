@@ -58,13 +58,11 @@ class TestCrudApi:
 
     def test_patch_update_account(self):
         pesel = self.base_account["pesel"]
-
         patch_data = {"name": "Kirk"}
         response = requests.patch(f"{self.url}/api/accounts/{pesel}", json=patch_data)
         assert response.status_code == 200
         data = response.json()
         assert data["message"] == "Account updated"
-
         response = requests.get(f"{self.url}/api/accounts/{pesel}")
         assert response.status_code == 200
         acc = response.json()
