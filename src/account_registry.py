@@ -20,3 +20,10 @@ class AccountRegistry:
 
     def count_accounts(self):
         return len(self.accounts)
+    
+    def delete_account(self, pesel) -> bool:
+        account = self.search_account(pesel)
+        if account is None:
+            return False
+        self.accounts.remove(account)
+        return True
