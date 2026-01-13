@@ -9,7 +9,11 @@ def personal():
 
 
 @pytest.fixture()
-def business():
+def business(mocker):
+    mocker.patch(
+        "src.business_account.BusinessAccount.is_nip_active_in_mf",
+        return_value=True,
+    )
     return BusinessAccount(company_name="Acme", nip="1234567890")
 
 
@@ -18,8 +22,8 @@ class TestExpressTransfers:
     @pytest.mark.parametrize(
         "start_balance, amount, expected_ok, expected_balance",
         [
-            (100.0, 100.0, True, -1.0),   # pozwala na debet o opłatę
-            (99.0, 100.0, False, 99.0),   # brak środków na kwotę przelewu
+            (100.0, 100.0, True, -1.0),
+            (99.0, 100.0, False, 99.0),
         ],
     )
     def test_express_out_personal(
@@ -33,8 +37,8 @@ class TestExpressTransfers:
     @pytest.mark.parametrize(
         "start_balance, amount, expected_ok, expected_balance",
         [
-            (100.0, 100.0, True, -5.0),   # fee 5
-            (50.0, 60.0, False, 50.0),    # brak środków na kwotę przelewu
+            (100.0, 100.0, True, -5.0),
+            (50.0, 60.0, False, 50.0),
         ],
     )
     def test_express_out_business(
