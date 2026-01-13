@@ -6,6 +6,8 @@ class AccountRegistry:
         self.accounts = []
     
     def add_account(self, account: Account):
+        if self.search_account(account.pesel) is not None:
+            return False
         self.accounts.append(account)
         return True
 

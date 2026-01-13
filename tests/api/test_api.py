@@ -79,7 +79,11 @@ class TestCrudApi:
         assert response.status_code == 404
 
     def test_create_account_with_already_existing_pesel(self):
+        count_before = requests.get(f"{self.url}/api/accounts/count").json()["count"]
         response = requests.post(f"{self.url}/api/accounts", json=self.base_account)
         assert response.status_code == 409
         data = response.json()
         assert data["message"] == "Account with this PESEL already exists"
+        count_after = requests.get(f"{self.url}/api/accounts/count").json()["count"]
+        assert count_after == count_before
+

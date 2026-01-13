@@ -61,4 +61,12 @@ class TestAccountRegsitry:
 
         assert empty_registry.count_accounts() == len(sample_accounts)
 
+    def test_add_account_returns_false_when_pesel_already_exists(self, empty_registry):
+        acc1 = Account("John", "Doe", "12345678901")
+        acc2 = Account("Jane", "Smith", "12345678901")
 
+        assert empty_registry.add_account(acc1) is True
+        assert empty_registry.count_accounts() == 1
+        assert empty_registry.add_account(acc2) is False
+        assert empty_registry.count_accounts() == 1
+        assert empty_registry.search_account("12345678901") is acc1
