@@ -1,5 +1,6 @@
 import os
 from datetime import date
+from src.smtp.smtp import SMTPClient
 
 import requests
 
@@ -83,3 +84,9 @@ class BusinessAccount:  # pragma: no cover
             self.balance += amount
             return True
         return False
+    
+    def send_history_via_email(self, email_address: str) -> bool:
+        today = date.today().isoformat()
+        subject = f"Account Transfer History {today}"
+        text = f"Company account history:{self.history}"
+        return SMTPClient.send(subject, text, email_address)
