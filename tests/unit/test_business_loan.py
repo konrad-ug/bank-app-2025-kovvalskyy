@@ -1,12 +1,17 @@
 import pytest
 from src.business_account import BusinessAccount
-    
+
+
 class TestBusinessLoan:
 
     @pytest.fixture()
-    def account(self):
+    def account(self, mocker):
+        mocker.patch(
+            "src.business_account.BusinessAccount.is_nip_active_in_mf",
+            return_value=True,
+        )
         return BusinessAccount("Acme", "1234567890")
-    
+
     @pytest.mark.parametrize(
         "balance, amount, history, expected, expected_balance",
         [

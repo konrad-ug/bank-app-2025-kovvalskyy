@@ -3,7 +3,9 @@
 
 ## Author:
 name: Jakub
+
 surname: Kowal
+
 group: 1
 
 ## How to start the app
@@ -11,4 +13,5 @@ flask --app app.api run
 
 ## How to execute tests
 pytest tests/unit
+
 pytest tests/api

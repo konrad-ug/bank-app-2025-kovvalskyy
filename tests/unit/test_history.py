@@ -9,7 +9,11 @@ def personal_account():
 
 
 @pytest.fixture
-def business_account():
+def business_account(mocker):
+    mocker.patch(
+        "src.business_account.BusinessAccount.is_nip_active_in_mf",
+        return_value=True,
+    )
     return BusinessAccount("Acme", "1234567890")
 
 
@@ -51,7 +55,7 @@ class TestHistoryPersonal:
         a.transfer_in(100.0)
         a.transfer_in(50.0)
         a.transfer_out(30.0)
-        a.express_out(20.0)  # -20, -1 fee
+        a.express_out(20.0)
         assert a.history == [100.0, 50.0, -30.0, -20.0, -1.0]
 
 
@@ -94,5 +98,5 @@ class TestHistoryBusiness:
         b.transfer_in(300.0)
         b.transfer_in(100.0)
         b.transfer_out(50.0)
-        b.express_out(100.0)  # -100, -5 fee
+        b.express_out(100.0)
         assert b.history == [300.0, 100.0, -50.0, -100.0, -5.0]

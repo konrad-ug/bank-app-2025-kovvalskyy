@@ -16,8 +16,8 @@ class TestTransfers:
     @pytest.mark.parametrize(
         "deposit, withdraw, expected_ok, expected_balance",
         [
-            (200.0, 150.0, True, 50.0),   # wystarczające srodki
-            (100.0, 150.0, False, 100.0), # niewystarczające srodki
+            (200.0, 150.0, True, 50.0),
+            (100.0, 150.0, False, 100.0),
         ],
     )
     def test_outgoing_transfer_variants(
@@ -36,7 +36,11 @@ class TestTransfers:
 class TestBusinessTransfers:
 
     @pytest.fixture()
-    def business(self):
+    def business(self, mocker):
+        mocker.patch(
+            "src.business_account.BusinessAccount.is_nip_active_in_mf",
+            return_value=True,
+        )
         return BusinessAccount("Acme Corp", "1234567890")
 
     def test_incoming_transfer_increases_balance(self, business):
@@ -46,8 +50,8 @@ class TestBusinessTransfers:
     @pytest.mark.parametrize(
         "deposit, withdraw, expected_ok, expected_balance",
         [
-            (300.0, 200.0, True, 100.0),  # wystarczające środki
-            (100.0, 150.0, False, 100.0), # niewystarczające srodki
+            (300.0, 200.0, True, 100.0),
+            (100.0, 150.0, False, 100.0),
         ],
     )
     def test_outgoing_transfer_variants(
