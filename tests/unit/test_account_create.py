@@ -28,6 +28,10 @@ class TestAccount:
         account = Account(first, last, pesel)
         assert account.pesel == expected
 
+    def test_promocode_rejected_for_person_born_before_1960(self):
+        a = Account("A", "B", "59010112345", promoCode="PROM_ABC")
+        assert a.balance == 0.0
+
     @pytest.mark.parametrize(
         "pesel, promo, expected_balance",
         [

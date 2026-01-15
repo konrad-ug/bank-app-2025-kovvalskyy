@@ -48,3 +48,10 @@ class TestExpressTransfers:
         ok = business.express_out(amount)
         assert ok is expected_ok
         assert business.balance == expected_balance
+
+    def test_express_out_rejects_non_positive_amount(self, personal):
+        assert personal.express_out(0) is False
+        assert personal.express_out(-1) is False
+    
+    def test_transfer_in_rejects_non_numeric_string(self, personal):
+        assert personal.transfer_in("abc") is False

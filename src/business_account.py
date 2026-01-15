@@ -9,6 +9,8 @@ class BusinessAccount:  # pragma: no cover
     def __init__(self, company_name: str, nip: str):  # pragma: no cover
         self.company_name = company_name
         self.nip = nip
+        if not (isinstance(nip, str) and len(nip) == 10 and nip.isdigit()):
+            self.nip = "Invalid"
         self.balance = 0.0
         self.history = []
 
