@@ -15,3 +15,7 @@ flask --app app.api run
 pytest tests/unit
 
 pytest tests/api
+
+pytest tests/perf
+
+python -m behave
