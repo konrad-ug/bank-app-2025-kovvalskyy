@@ -7,7 +7,7 @@ class TestBusinessAccount:
     @pytest.mark.parametrize(
         "nip, expected",
         [
-            ("12345", "12345"),
+            ("12345", "Invalid"),
             ("1234567890", "1234567890"),
         ],
     )

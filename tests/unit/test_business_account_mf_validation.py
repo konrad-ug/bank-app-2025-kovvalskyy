@@ -18,7 +18,7 @@ class TestBusinessAccountMfValidation:
         get_mock = mocker.patch("src.business_account.requests.get")
 
         b = BusinessAccount(company_name="Foo", nip="123")
-        assert b.nip == "123"
+        assert b.nip == "Invalid"
 
         get_mock.assert_not_called()
 

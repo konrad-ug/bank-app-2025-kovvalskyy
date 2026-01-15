@@ -25,8 +25,8 @@ class Account:
 
     def _is_positive(self, amount):
         try:
-            return isinstance(amount, (int, float)) and amount > 0
-        except Exception:
+            return float(amount) > 0
+        except (TypeError, ValueError):
             return False
 
     def can_transfer_out(self, amount: float):
@@ -59,12 +59,14 @@ class Account:
         return True
 
     def submit_for_loan(self, amount: float):
-        if (all(x > 0 for x in self.history[-3:]) or ((len(self.history) > 4) and (sum(self.history[-5:]) > amount))):
+        last3_incoming = len(self.history) >= 3 and all(x > 0 for x in self.history[-3:])
+        last5_sum_ok = len(self.history) >= 5 and sum(self.history[-5:]) > amount
+
+        if last3_incoming or last5_sum_ok:
             self.balance += amount
             return True
-        else:
-            return False
-    
+        return False
+
     def send_history_via_email(self, email_address: str) -> bool:
         today = date.today().isoformat()
         subject = f"Account Transfer History {today}"

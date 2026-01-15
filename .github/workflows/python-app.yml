@@ -37,3 +37,6 @@ jobs:
     - name: Test with pytest
       run: |
         python3 -m coverage run --source=src -m pytest tests/unit
+    - name: Coverage na 100%
+      run: |
+        python3 -m coverage report -m --fail-under=100
