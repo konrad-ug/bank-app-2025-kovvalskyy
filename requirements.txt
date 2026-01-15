@@ -3,3 +3,4 @@ requests
 pytest==8.4.2
 pytest-mock
 coverage==6.5.0
+behave
