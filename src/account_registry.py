@@ -29,3 +29,9 @@ class AccountRegistry:
             return False
         self.accounts.remove(account)
         return True
+    
+    def clear(self) -> None:
+        self.accounts = []
+
+    def set_accounts(self, accounts) -> None:
+        self.accounts = list(accounts)
