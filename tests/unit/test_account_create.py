@@ -47,3 +47,23 @@ class TestAccount:
         first, last = names
         account = Account(first, last, pesel, promo)
         assert account.balance == expected_balance
+
+    def test_account_to_dict_from_dict_roundtrip(self):
+        a = Account("John", "Doe", "12345678901")
+        a.transfer_in(100)
+        a.transfer_out(10)
+
+        d = a.to_dict()
+        b = Account.from_dict(d)
+
+        assert b.first_name == a.first_name
+        assert b.last_name == a.last_name
+        assert b.pesel == a.pesel
+        assert b.balance == a.balance
+        assert b.history == a.history
+
+
+    def test_account_from_dict_defaults_when_missing_fields(self):
+        b = Account.from_dict({"first_name": "John", "last_name": "Doe", "pesel": "12345678901"})
+        assert b.balance == 0.0
+        assert b.history == []

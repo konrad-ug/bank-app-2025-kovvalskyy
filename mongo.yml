@@ -1,0 +1,7 @@
+services:
+  mongo:
+    image: mongo:6
+    platform: linux/amd64
+    container_name: mongo_container
+    ports:
+      - "27017:27017"

@@ -11,6 +11,8 @@ group: 1
 ## How to start the app
 flask --app app.api run
 
+docker compose -f mongo.yml up -d
+
 ## How to execute tests
 pytest tests/unit
 

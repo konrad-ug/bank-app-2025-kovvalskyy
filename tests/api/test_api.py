@@ -24,10 +24,18 @@ class TestCrudApi:
             assert delete_response.status_code == 200
 
     def test_get_account_count(self):
+        for acc in requests.get(f"{self.url}/api/accounts").json():
+            requests.delete(f"{self.url}/api/accounts/{acc['pesel']}")
+
+        payload = {"name": "John", "surname": "Doe", "pesel": "12345678901"}
+        r = requests.post(f"{self.url}/api/accounts", json=payload)
+        assert r.status_code == 201
+
         response = requests.get(f"{self.url}/api/accounts/count")
         assert response.status_code == 200
         data = response.json()
         assert data["count"] == 1
+
 
     def test_create_account(self):
         new_account = {

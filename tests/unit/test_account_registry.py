@@ -82,3 +82,17 @@ class TestAccountRegsitry:
         assert empty_registry.delete_account("12345678901") is True
         assert empty_registry.search_account("12345678901") is None
         assert empty_registry.count_accounts() == 0
+    
+    def test_registry_clear_and_set_accounts(self):
+        r = AccountRegistry()
+        a1 = Account("John", "Doe", "12345678901")
+        a2 = Account("Jane", "Roe", "89092909825")
+
+        r.add_account(a1)
+        assert r.count_accounts() == 1
+
+        r.clear()
+        assert r.count_accounts() == 0
+
+        r.set_accounts([a1, a2])
+        assert r.count_accounts() == 2
